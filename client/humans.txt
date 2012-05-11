@@ -9,9 +9,9 @@
   Location:
 
   Insanity: Michael Kwan
-  Site:
-  Twitter:
-  Location:
+  Site: http://kwogger.ca
+  Twitter: kwogger
+  Location: Unknown
 
   <your title>: Chris Soon
   Site:
