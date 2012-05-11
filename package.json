@@ -1,0 +1,16 @@
+{
+  "author": "JB",
+  "name": "uranus",
+  "description": "A our tojam2012 hame",
+  "version": "0.0.1",
+  "main": "app.js",
+  "dependencies": {
+    "express": "2.5.9",
+    "socket.io": "0.9.6"
+    },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
