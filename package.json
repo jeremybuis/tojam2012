@@ -1,7 +1,7 @@
 {
   "author": "JB",
   "name": "uranus",
-  "description": "A our tojam2012 hame",
+  "description": "A our tojam2012 game",
   "version": "0.0.1",
   "main": "app.js",
   "dependencies": {

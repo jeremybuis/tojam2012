@@ -1,6 +1,8 @@
 var express = require('express');
 var io = require('socket.io');
 
+var playerList = [];
+
 var createServer = function(directory) {
 	var app = express.createServer();
 
@@ -21,18 +23,23 @@ var createServer = function(directory) {
 
 	app.get('/', function(req, res) {
 		res.send('Hello World');
-
-		console.log(__dirname + '../client');
 	});
 
 	var sio = io.listen(app);
 
 	sio.sockets.on('connection', function (socket) {
-		socket.emit('news', { hello: 'world' });
-		socket.on('my other event', function (data) {
-			console.log(data);
+		//add players to state
+		socket.emit('player connect', {
+			hello: "world"
 		});
 	});
+
+	sio.sockets.on('disconnect', function (socket) {
+		//remove player from state
+		socket.emit('player disconnect', {
+			hello: "world"
+		});
+	})
 }
 
 exports.createServer = createServer;

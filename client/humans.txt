@@ -4,9 +4,9 @@
 
 /* TEAM */
   Nerd: Jeremy Buis
-  Site:
+  Site: hhtp://jeremybuis.com
   Twitter:@jeremybuis
-  Location:
+  Location: A galaxy far far away
 
   Insanity: Michael Kwan
   Site: http://kwogger.ca
