@@ -59,6 +59,7 @@ Server.prototype.createServer = function(directory, port) {
 	this.app = express.createServer();
 
 	this.app.configure(function() {
+		//Handles the static content serving
 		that.app.use(express.static(directory + '/client'));
 		
 		// that.app.use(express.bodyParser());
@@ -78,16 +79,35 @@ Server.prototype.createServer = function(directory, port) {
 Server.prototype.handleClientEvents = function() {
 	var that = this;
 
-	//Connection/Disconnect code
 	this.io.sockets.on(client_event_types.conn, function (socket) {
 		util.log(client_event_types.conn);
 
 		that.clients[socket.id] = socket; //add the socket to our list of clients
 
+		//join event - these are dummy values for now
+		socket.emit(server_event_types.join, {
+			id: "1",
+			color: "#000000",
+			x: 0,
+			y: 0,
+			ships: []
+		});
+
+		//all the following event handling code is for this's socket, so one client
+		//each client
+
 		socket.on(client_event_types.disconn, function (data) {
 			util.log(client_event_types.disconn);
 
+			//removes the socket.id from the clients object
 			delete that.clients[socket.id];
+
+			for (var client in that.clients) {
+				//send the data to all the other clients
+				that.clients[client].emit(server_event_types.diconn, {
+					//id
+				});
+			}
 		});
 
 		//POS
@@ -105,16 +125,37 @@ Server.prototype.handleClientEvents = function() {
 		//BULLET
 		socket.on(client_event_types.bullet, function (data) {
 			util.log(client_event_types.bullet);
+
+			for (var client in that.clients) {
+				if (socket.id !== client) {
+					//send the data to all the other clients
+					that.clients[client].emit(server_event_types.bullet, data);
+				}
+			}
 		});
 
 		//BULLET DEATH
 		socket.on(client_event_types.bullet_death, function (data) {
 			util.log(client_event_types.bullet_death);
+
+			for (var client in that.clients) {
+				if (socket.id !== client) {
+					//send the data to all the other clients
+					that.clients[client].emit(server_event_types.bullet_death, data);
+				}
+			}
 		});
 
 		//DEATH
 		socket.on(client_event_types.death, function (data) {
 			util.log(client_event_types.death);
+
+			for (var client in that.clients) {
+				if (socket.id !== client) {
+					//send the data to all the other clients
+					that.clients[client].emit(server_event_types.death, data);
+				}
+			}
 		});
 	});	
 };
