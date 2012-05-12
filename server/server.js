@@ -84,36 +84,39 @@ Server.prototype.handleClientEvents = function() {
 
 		that.clients[socket.id] = socket; //add the socket to our list of clients
 
-		socket.on(client_event_types.disconn, function() {
+		socket.on(client_event_types.disconn, function (data) {
 			util.log(client_event_types.disconn);
 
 			delete that.clients[socket.id];
 		});
-	});
 
-	//Game event code
-	//POS
-	this.io.sockets.on(client_event_types.pos, function (socket) {
-		util.log(client_event_types.pos);
+		//POS
+		socket.on(client_event_types.pos, function (data) {
+			util.log(client_event_types.pos);
 
-		//emit the clients position to all the other clients
-	});
+			for (var client in that.clients) {
+				if (socket.id !== client) {
+					//send the data to all the other clients
+					that.clients[client].emit(server_event_types.pos, data);
+				}
+			}
+		});
 
-	//BULLET
-	this.io.sockets.on(client_event_types.bullet, function (socket) {
-		util.log(client_event_types.bullet);
-	});
+		//BULLET
+		socket.on(client_event_types.bullet, function (data) {
+			util.log(client_event_types.bullet);
+		});
 
-	//BULLET_DEATH
-	this.io.sockets.on(client_event_types.bullet_death, function (socket) {
-		util.log(client_event_types.bullet_death);
-	});
+		//BULLET DEATH
+		socket.on(client_event_types.bullet_death, function (data) {
+			util.log(client_event_types.bullet_death);
+		});
 
-	//DEATH
-	this.io.sockets.on(client_event_types.death, function (socket) {
-		util.log(client_event_types.death);
-	});
-	
+		//DEATH
+		socket.on(client_event_types.death, function (data) {
+			util.log(client_event_types.death);
+		});
+	});	
 };
 
 function createServer(dir, port) {
