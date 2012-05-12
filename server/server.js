@@ -3,43 +3,62 @@ var io = require('socket.io');
 
 var playerList = [];
 
-var createServer = function(directory) {
-	var app = express.createServer();
+function Server() {
+	this.app = null;
+	this.sio = null;
+};
 
-	app.configure(function() {
-		app.use(express.static(directory + '/client'));
+Server.prototype.createServer = function(directory) {
+	var that = this;
 
-		app.use(express.bodyParser());
+	this.app = express.createServer();
+
+	this.app.configure(function() {
+		that.app.use(express.static(directory + '/client'));
+
+		that.app.use(express.bodyParser());
 		
-		app.use(express.cookieParser());
-		app.use(express.session({secret: 'secret', key: 'express.sid'}));
+		that.app.use(express.cookieParser());
+		that.app.use(express.session({secret: 'secret', key: 'express.sid'}));
 		// app.use(function(req, res) {
 		// 	res.end('<h2>Hello, your session id is ' + req.sessionID + '</h2>');
 		// });
 	});
+};
 
-	app.listen(1337);
-	console.log('server listening on 1337');
-
-	app.get('/', function(req, res) {
-		res.send('Hello World');
-	});
-
-	var sio = io.listen(app);
-
-	sio.sockets.on('connection', function (socket) {
-		//add players to state
-		socket.emit('player connect', {
-			hello: "world"
-		});
-	});
-
-	sio.sockets.on('disconnect', function (socket) {
-		//remove player from state
-		socket.emit('player disconnect', {
-			hello: "world"
-		});
-	})
+Server.prototype.listen = function(port) {
+	this.app.listen(1337);
+	this.sio = io.listen(this.app);
 }
+
+Server.prototype.handleConnections = function() {
+	
+	this.sio.sockets.on('connection', function (socket) {
+		//add players to state
+		// socket.emit('player connect', {
+		// 	hello: "world"
+		// });
+
+		//do something
+	});
+
+	this.sio.sockets.on('disconnect', function (socket) {
+		//remove player from state
+		// socket.emit('player disconnect', {
+		// 	hello: "world"
+		// });
+
+		//do something
+	})
+	
+};
+
+function createServer(dir) {
+	var srv = new Server()
+
+	srv.createServer(dir);
+	srv.listen(1337);
+	srv.handleConnections();
+};
 
 exports.createServer = createServer;
