@@ -12,6 +12,9 @@ var BULLET_RADIUS = 5;
 var SHIP_MAX_ACCEL = 0.1;
 var MAX_STAT = 1;
 var START_STAT = 0.5;
+var MAX_TURN_INCREASE = 4.5;
+var MIN_TURN = 0.5;
+var FUEL_DECREASE_TURN = 0.01;
 
 // Physics constants
 var TIME_CONST = 1;
@@ -142,15 +145,18 @@ Crafty.c('player', {
 
 		this.bind('EnterFrame', function(e) {
 			// TODO: drain fuel here and variable turn rate
+			var rotationRate = MIN_TURN + MAX_TURN_INCREASE * this.engine;
 			if (this.isDown(CTRL_TURN_CW)) {
 				if (this.isDown(CTRL_TURN_CCW)) {
-
+					this.engine -= FUEL_DECREASE_TURN * 2;
 				} else {
-					this.rotation = (this.rotation - 5) % 360;
+					this.engine -= FUEL_DECREASE_TURN;
+					this.rotation = (this.rotation - rotationRate) % 360;
 				}
 			} else {
 				if (this.isDown(CTRL_TURN_CCW)) {
-					this.rotation = (this.rotation + 5) % 360;
+					this.engine -= FUEL_DECREASE_TURN;
+					this.rotation = (this.rotation + rotationRate) % 360;
 				}
 			}
 
