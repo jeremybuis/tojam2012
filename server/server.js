@@ -130,12 +130,12 @@ Server.prototype.handleClientEvents = function() {
 		//tell all the other clients about this client joining
 		for (var client in that.clients) {
 			if (socket.id !== client) {
-				that.clients[client].emit(server_event_types.conn, that.clients[socket.id].ship);
+				that.clients[client].socket.emit(server_event_types.conn, that.clients[socket.id].ship);
 				others.push(that.clients[client].ship);
 			}
 		}
 
-		//join event - these are dummy values for now - send to current socket
+		//join event - send to current socket
 		socket.emit(server_event_types.join, {
 			id: that.clients[socket.id].ship.id,
 			color: that.clients[socket.id].ship.color,
@@ -153,7 +153,7 @@ Server.prototype.handleClientEvents = function() {
 			for (var client in that.clients) {
 				if (socket.id !== client) {
 					//send the data to all the other clients
-					that.clients[client].emit(server_event_types.diconn, {
+					that.clients[client].socket.emit(server_event_types.diconn, {
 						id: that.clients[socket.id].ship.id
 					});
 				}
@@ -167,10 +167,24 @@ Server.prototype.handleClientEvents = function() {
 		socket.on(client_event_types.pos, function (data) {
 			util.log(client_event_types.pos);
 
+			//sync our data
+			var currentShip = that.clients[socket.id].ship;
+
+			currentShip.x = data.x;
+			currentShip.y = data.y;
+			currentShip.theta = data.theta;
+			currentShip.vx = data.vx;
+			currentShip.vy = data.vy;
+			currentShip.health = data.health;
+			currentShip.fuel = data.fuel;
+			currentShip.weapon = data.weapon;
+			currentShip.kills = data.kills;
+			currentShip.deaths = data.deaths;
+
 			for (var client in that.clients) {
 				if (socket.id !== client) {
 					//send the data to all the other clients
-					that.clients[client].emit(server_event_types.pos, data);
+					that.clients[client].socket.emit(server_event_types.pos, currentShip);
 				}
 			}
 		});
@@ -182,7 +196,7 @@ Server.prototype.handleClientEvents = function() {
 			for (var client in that.clients) {
 				if (socket.id !== client) {
 					//send the data to all the other clients
-					that.clients[client].emit(server_event_types.bullet, data);
+					that.clients[client].socket.emit(server_event_types.bullet, data);
 				}
 			}
 		});
@@ -194,7 +208,7 @@ Server.prototype.handleClientEvents = function() {
 			for (var client in that.clients) {
 				if (socket.id !== client) {
 					//send the data to all the other clients
-					that.clients[client].emit(server_event_types.bullet_death, data);
+					that.clients[client].socket.emit(server_event_types.bullet_death, data);
 				}
 			}
 		});
@@ -206,7 +220,7 @@ Server.prototype.handleClientEvents = function() {
 			for (var client in that.clients) {
 				if (socket.id !== client) {
 					//send the data to all the other clients
-					that.clients[client].emit(server_event_types.death, data);
+					that.clients[client].socket.emit(server_event_types.death, data);
 				}
 			}
 		});
