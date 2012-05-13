@@ -177,7 +177,7 @@ Crafty.c('player', {
 			this.ay = acc * Math.sin(this.rotation * DEG_TO_RAD);
 
 			if (e.frame % SHIP_UPDATE_RATE === 0) {
-				this.socket.emit('POS', JSON.stringify({
+				this.socket.emit('POS', {
 					id: this.id,
 					x: this.x,
 					y: this.y,
@@ -187,7 +187,7 @@ Crafty.c('player', {
 					health: this.hull,
 					fuel: this.engine,
 					weapon: this.weap
-				}));
+				});
 			}
 		});
 	}
