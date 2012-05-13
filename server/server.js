@@ -140,9 +140,11 @@ Server.prototype.handleClientEvents = function() {
 
 		//tell all the other clients about this client joining
 		for (var client in that.clients) {
-			if (socket.id !== client) {
-				that.clients[client].socket.emit(server_event_types.conn, that.clients[socket.id].ship);
-				others.push(that.clients[client].ship);
+			if (that.clients.hasOwnProperty(client)) {
+				if (socket.id !== client) {
+					that.clients[client].socket.emit(server_event_types.conn, that.clients[socket.id].ship);
+					others.push(that.clients[client].ship);
+				}
 			}
 		}
 
@@ -162,11 +164,13 @@ Server.prototype.handleClientEvents = function() {
 			util.log(client_event_types.disconn);
 
 			for (var client in that.clients) {
-				if (socket.id !== client) {
-					//send the data to all the other clients
-					that.clients[client].socket.emit(server_event_types.diconn, {
-						id: that.clients[socket.id].ship.id
-					});
+				if (that.clients.hasOwnProperty(client)) {
+					if (socket.id !== client) {
+						//send the data to all the other clients
+						that.clients[client].socket.emit(server_event_types.diconn, {
+							id: that.clients[socket.id].ship.id
+						});
+					}
 				}
 			}
 
@@ -193,9 +197,11 @@ Server.prototype.handleClientEvents = function() {
 			currentShip.deaths = data.deaths;
 
 			for (var client in that.clients) {
-				if (socket.id !== client) {
-					//send the data to all the other clients
-					that.clients[client].socket.emit(server_event_types.pos, currentShip);
+				if (that.clients.hasOwnProperty(client)) {
+					if (socket.id !== client) {
+						//send the data to all the other clients
+						that.clients[client].socket.emit(server_event_types.pos, currentShip);
+					}
 				}
 			}
 		});
@@ -205,9 +211,11 @@ Server.prototype.handleClientEvents = function() {
 			util.log(client_event_types.bullet);
 
 			for (var client in that.clients) {
-				if (socket.id !== client) {
-					//send the data to all the other clients
-					that.clients[client].socket.emit(server_event_types.bullet, data);
+				if (that.clients.hasOwnProperty(client)) {
+					if (socket.id !== client) {
+						//send the data to all the other clients
+						that.clients[client].socket.emit(server_event_types.bullet, data);
+					}
 				}
 			}
 		});
@@ -217,9 +225,11 @@ Server.prototype.handleClientEvents = function() {
 			util.log(client_event_types.bullet_death);
 
 			for (var client in that.clients) {
-				if (socket.id !== client) {
-					//send the data to all the other clients
-					that.clients[client].socket.emit(server_event_types.bullet_death, data);
+				if (that.clients.hasOwnProperty(client)) {
+					if (socket.id !== client) {
+						//send the data to all the other clients
+						that.clients[client].socket.emit(server_event_types.bullet_death, data);
+					}
 				}
 			}
 		});
@@ -229,9 +239,11 @@ Server.prototype.handleClientEvents = function() {
 			util.log(client_event_types.death);
 
 			for (var client in that.clients) {
-				if (socket.id !== client) {
-					//send the data to all the other clients
-					that.clients[client].socket.emit(server_event_types.death, data);
+				if (that.clients.hasOwnProperty(client)) {
+					if (socket.id !== client) {
+						//send the data to all the other clients
+						that.clients[client].socket.emit(server_event_types.death, data);
+					}
 				}
 			}
 		});
