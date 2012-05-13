@@ -3,7 +3,7 @@ var util = require('util');
 var express = require('express');
 var sio = require('socket.io');
 
-var colours = {
+var colors = {
 	red: "#FF0000",
 	blue: "#0000FF",
 	green: "#008000",
@@ -22,7 +22,6 @@ var client_event_types = {
 	bullet_death: 'BULLET_DEATH',
 	death: 'DEATH',
 
-	//these are implicit
 	conn: 'connection',
 	disconn: 'disconnect'
 };
@@ -36,6 +35,37 @@ var server_event_types = {
 	bullet: 'BULLET',
 	bullet_death: 'BULLET_DEATH'
 };
+
+//
+// Our chip class
+//
+//
+
+var Ship = (function() {
+
+	var id = 0;	//A static var to keep track of ids
+	var NewShip;
+
+	//This becomes the new constructor
+	NewShip = function() {
+		this.id = id += 1;
+		this.color = colors.red;
+		this.x = 0;
+		this.y = 0;
+	};
+
+	return NewShip;
+}());
+
+var falcon = new Ship();
+var ebon_hawk = new Ship();
+var enterprise = new Ship();
+var voyager = new Ship();
+
+util.log(util.inspect(falcon));
+util.log(util.inspect(ebon_hawk));
+util.log(util.inspect(enterprise));
+util.log(util.inspect(voyager));
 
 
 //
@@ -82,16 +112,28 @@ Server.prototype.handleClientEvents = function() {
 	this.io.sockets.on(client_event_types.conn, function (socket) {
 		util.log(client_event_types.conn);
 
-		that.clients[socket.id] = socket; //add the socket to our list of clients
+		that.clients[socket.id] = socket;
 
-		//join event - these are dummy values for now
+		//join event - these are dummy values for now - send to current socket
 		socket.emit(server_event_types.join, {
 			id: "1",
-			color: "#000000",
+			color: colors.red,
 			x: 0,
 			y: 0,
 			ships: []
 		});
+
+		//tell all the other clients about this client joining
+		for (var client in that.clients) {
+			if (socket.id !== client) {
+				that.clients[client].emit(server_event_types.conn, {
+					id: socket.id,
+					color: colors.red,
+					x: 0,
+					y: 0
+				});
+			}
+		}
 
 		//all the following event handling code is for this's socket, so one client
 		//each client
@@ -99,15 +141,15 @@ Server.prototype.handleClientEvents = function() {
 		socket.on(client_event_types.disconn, function (data) {
 			util.log(client_event_types.disconn);
 
-			//removes the socket.id from the clients object
-			delete that.clients[socket.id];
-
 			for (var client in that.clients) {
 				//send the data to all the other clients
 				that.clients[client].emit(server_event_types.diconn, {
-					//id
+					id: socket.id
 				});
 			}
+
+			//removes the socket.id from the clients object
+			delete that.clients[socket.id];
 		});
 
 		//POS
@@ -157,7 +199,7 @@ Server.prototype.handleClientEvents = function() {
 				}
 			}
 		});
-	});	
+	});
 };
 
 function createServer(dir, port) {
