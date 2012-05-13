@@ -244,6 +244,7 @@ Crafty.c('player', {
 								y: this.y,
 								killingId: bulletHit.playerId
 							});
+							Crafty.e('death').death(this.x, this.y);
 						}
 						bulletHit.remove();
 						Crafty.audio.play('hit');
@@ -318,6 +319,25 @@ Crafty.c('bullet', {
 	}
 });
 
+Crafty.c('death', {
+	init: function() {
+		this.requires('2D, DOM');
+		this.animCnt = 60;
+
+		this.bind('EnterFrame', function(e) {
+			if (--this.animCnt === 0) {
+				this.destroy();
+			}
+		});
+
+		Crafty.audio.play('death');
+	},
+	death: function(x, y) {
+		this.x = x;
+		this.x = y;
+	}
+});
+
 Crafty.scene('game', function() {
 	var socket = io.connect();
 	var ships = {};
@@ -351,7 +371,7 @@ Crafty.scene('game', function() {
 
 	socket.on('DEATH', function (data) {
 		console.log(data);
-		// TODO: render the death animation
+		Crafty.e('death').death(data.x, data.y);
 	});
 
 	socket.on('POS', function (data) {
