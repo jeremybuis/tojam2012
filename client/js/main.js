@@ -17,6 +17,11 @@ var MAX_TURN_INCREASE = 4.5;
 var MIN_TURN = 0.5;
 var FUEL_DECREASE_TURN = 0.001;
 var FUEL_DECREASE_ENGINE = 0.0005;
+var BULLET_MAX_POWER = 250;
+var BULLET_VEL_INCREASE = 5;
+var MIN_WEAP_POWER = 0.1;
+var MAX_WEAP_POWER_INCREASE = 0.9;
+var WEAP_POWER_DECREASE = 0.1;
 
 // Physics constants
 var TIME_CONST = 1;
@@ -31,6 +36,7 @@ var CTRL_ACCEL = Crafty.keys.W;
 var CTRL_DECEL = Crafty.keys.S;
 var CTRL_TURN_CW = Crafty.keys.A;
 var CTRL_TURN_CCW = Crafty.keys.D;
+var CTRL_SHOOT = Crafty.keys.SPACE;
 
 Crafty.c('socket', {
 	initSocket: function(socket) {
@@ -142,6 +148,8 @@ Crafty.c('player', {
 		this.requires('ship, Keyboard, socket');
 
 		this.attr({
+			bullets: null,
+			bulletCnt: 0,
 			shoot: true
 		});
 
@@ -189,7 +197,31 @@ Crafty.c('player', {
 					weapon: this.weap
 				}));
 			}
+
+			if (this.isDown(CTRL_SHOOT)) {
+				if (this.shoot) {
+					this.shoot = false;
+					var bulletId = this.id + ':' + this.bulletCnt++;
+
+					this.bullets[bulletId] = Crafty.e('bullet').bullet(
+						bulletId,
+						this.id,
+						this.x + this.w / 2 + (this.w / 2 + BULLET_RADIUS) * Math.cos(this.rotation * DEG_TO_RAD),
+						this.y + this.h / 2 + (this.h / 2 + BULLET_RADIUS) * Math.sin(this.rotation * DEG_TO_RAD),
+						this.vx + BULLET_VEL_INCREASE * Math.cos(this.rotation * DEG_TO_RAD),
+						this.vy + BULLET_VEL_INCREASE * Math.sin(this.rotation * DEG_TO_RAD),
+						BULLET_MAX_POWER * (this.weap + MIN_WEAP_POWER),
+						this.bullets);
+					this.weap = Math.max(this.weap - WEAP_POWER_DECREASE, 0);
+				}
+			} else if (!this.shoot) {
+				this.shoot = true;
+			}
 		});
+	},
+	player: function(bullets) {
+		this.bullets = bullets;
+		return this;
 	}
 });
 
@@ -209,8 +241,6 @@ Crafty.c('bullet', {
 		});
 
 		this.bind('EnterFrame', function(e) {
-			this.vx = this.vx + this.ax * TIME_CONST;
-			this.vy = this.vy + this.ay * TIME_CONST;
 			this.x = this.x + this.vx * TIME_CONST;
 			while (this.x > FIELD_WIDTH) {
 				this.x -= FIELD_WIDTH;
@@ -227,7 +257,12 @@ Crafty.c('bullet', {
 				this.y += FIELD_HEIGHT;
 			}
 
-			// TODO: decay bullet and kill itself
+			// decay bullet and kill itself
+			if (this.power !== null) {
+				if (--this.power <= 0) {
+					this.remove();
+				}
+			}
 		});
 	},
 	bullet: function(id, playerId, x, y, vx, vy, power, bullets) {
@@ -255,7 +290,7 @@ Crafty.scene('game', function() {
 
 	socket.on('JOIN', function (data) {
 		console.log(data);
-		var player = Crafty.e('ship, player').initSocket(socket).ship(
+		var player = Crafty.e('ship, player').player(bullets).initSocket(socket).ship(
 			data['id'],
 			data['color']['r'],
 			data['color']['g'],
