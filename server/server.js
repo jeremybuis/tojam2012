@@ -230,7 +230,7 @@ Server.prototype.onClientEvents = function() {
 
 		//DISCONN
 		socket.on(client_event_types.disconn, function () {
-			util.log(client_event_types.disconn);
+			//util.log(client_event_types.disconn);
 
 			var data = {
 				id: that.clients[socket.id].ship.id
@@ -280,7 +280,7 @@ Server.prototype.onClientEvents = function() {
 
 		//DEATH
 		socket.on(client_event_types.death, function (data) {
-			util.log(client_event_types.death);
+			//util.log(client_event_types.death);
 
 			var dead = data.id;
 			var killer = data.killingId;
@@ -302,14 +302,14 @@ Server.prototype.onClientEvents = function() {
 
 		//BULLET
 		socket.on(client_event_types.bullet, function (data) {
-			util.log(client_event_types.bullet);
+			//util.log(client_event_types.bullet);
 
 			that.emitServerEvent(server_event_types.bullet, socket, data);
 		});
 
 		//BULLET DEATH
 		socket.on(client_event_types.bullet_death, function (data) {
-			util.log(client_event_types.bullet_death);
+			//util.log(client_event_types.bullet_death);
 
 			that.emitServerEvent(server_event_types.bullet_death, socket, data);
 		});
