@@ -9,7 +9,7 @@
 
 	socket.on('player disconnect', function (data) {
 		console.log('disconnection');
-		console.log(data)
+		console.log(data);
 	});
 
 })(window);
@@ -38,7 +38,7 @@ Crafty.c('ship', {
 		this.color('#fff');
 	},
 	vel_x: 0,
-	vel_y: 0,
+	vel_y: 0
 });
 
 Crafty.c('player', {
@@ -51,7 +51,7 @@ Crafty.c('player', {
 			right: false,
 			up: false
 		};
-	},
+	}
 });
 
 Crafty.scene('ship_test', function() {
