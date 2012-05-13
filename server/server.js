@@ -248,14 +248,14 @@ Server.prototype.onClientEvents = function() {
 			//sync our data
 			var currentShip = that.clients[socket.id].ship;
 
-			// currentShip.x = data.x;
-			// currentShip.y = data.y;
-			// currentShip.theta = data.theta;
-			// currentShip.vx = data.vx;
-			// currentShip.vy = data.vy;
-			// currentShip.health = data.health;
-			// currentShip.fuel = data.fuel;
-			// currentShip.weapon = data.weapon;
+			currentShip.x = data.x;
+			currentShip.y = data.y;
+			currentShip.theta = data.theta;
+			currentShip.vx = data.vx;
+			currentShip.vy = data.vy;
+			currentShip.health = data.health;
+			currentShip.fuel = data.fuel;
+			currentShip.weapon = data.weapon;
 
 			//wrap our ship into an object to send out
 			var out = {
@@ -272,8 +272,8 @@ Server.prototype.onClientEvents = function() {
 				deaths: currentShip.deaths
 			};
 
-			util.debug(util.inspect(data));
-			//util.debug(util.inspect(out));
+			//util.debug(util.inspect(data));
+			util.debug(util.inspect(out));
 
 			that.emitServerEvent(server_event_types.pos, socket, out);
 		});
