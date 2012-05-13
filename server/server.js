@@ -74,7 +74,7 @@ var nextColor = (function() {
 var nextPosition = (function() {
 	var positions = [
 		{x: 0, y:0},
-		
+
 		{x: 500, y:0},
 		{x: 0, y:500},
 		{x: 500, y:500},
@@ -289,12 +289,12 @@ Server.prototype.onClientEvents = function() {
 			var killer = data.killingId;
 
 			//update the kill death counters
-			for (var client in clients) {
+			for (var client in that.clients) {
 				if (that.clients.hasOwnProperty(client)) {
 					if (killer === clients[client].ship.id) {
-						clients[client].ship.kills += 1;
+						that.clients[client].ship.kills += 1;
 					} else if (dead === clients[client].ship.id) {
-						clients[client].ship.deaths += 1;
+						that.clients[client].ship.deaths += 1;
 					}
 				}
 			}
