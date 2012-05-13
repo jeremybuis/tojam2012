@@ -246,6 +246,7 @@ Crafty.c('player', {
 							});
 						}
 						bulletHit.remove();
+						Crafty.audio.play('hit');
 					}
 				}
 			}
@@ -296,6 +297,8 @@ Crafty.c('bullet', {
 				}
 			}
 		});
+
+		Crafty.audio.play('shot');
 	},
 	bullet: function(id, playerId, x, y, vx, vy, power, bullets) {
 		this.id = id;
@@ -391,6 +394,7 @@ Crafty.scene('game', function() {
 	socket.on('BULLET_DEATH', function (data) {
 		console.log(data);
 		bullets[data['id']].remove();
+		Crafty.audio.play('hit');
 	});
 
 });
@@ -398,5 +402,19 @@ Crafty.scene('game', function() {
 window.onload = function() {
 	//start crafty, full screen
 	Crafty.init(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	Crafty.audio.add('death', [
+		"snd/death.ogg",
+		"snd/death.mp3",
+		"snd/death.wav"]);
+	Crafty.audio.add('hit', [
+		"snd/hit.ogg",
+		"snd/hit.mp3",
+		"snd/hit.wav"]);
+	Crafty.audio.add('shot', [
+		"snd/shot.ogg",
+		"snd/shot.mp3",
+		"snd/shot.wav"]);
+
 	Crafty.scene('game');
 };
