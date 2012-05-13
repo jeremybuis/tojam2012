@@ -40,7 +40,6 @@ var server_event_types = {
 // Our chip class
 //
 //
-
 var Ship = (function() {
 
 	var id = 0;	//A static var to keep track of ids
@@ -49,23 +48,31 @@ var Ship = (function() {
 	//This becomes the new constructor
 	NewShip = function() {
 		this.id = id += 1;
-		this.color = colors.red;
 		this.x = 0;
 		this.y = 0;
+		this.theta = 0;
+		this.vx = 0;
+		this.vy = 0;
+		this.health = 100;
+		this.fuel = 100;
+		this.weapon = 1;
+		this.color = colors.red;
+		this.kills = 0;
+		this.deaths = 0;
 	};
 
 	return NewShip;
 }());
 
-var falcon = new Ship();
-var ebon_hawk = new Ship();
-var enterprise = new Ship();
-var voyager = new Ship();
+// var millenium_falcon = new Ship();
+// var ebon_hawk = new Ship();
+// var enterprise = new Ship();
+// var voyager = new Ship();
 
-util.log(util.inspect(falcon));
-util.log(util.inspect(ebon_hawk));
-util.log(util.inspect(enterprise));
-util.log(util.inspect(voyager));
+// util.log(util.inspect(millenium_falcon));
+// util.log(util.inspect(ebon_hawk));
+// util.log(util.inspect(enterprise));
+// util.log(util.inspect(voyager));
 
 
 //
@@ -112,28 +119,30 @@ Server.prototype.handleClientEvents = function() {
 	this.io.sockets.on(client_event_types.conn, function (socket) {
 		util.log(client_event_types.conn);
 
-		that.clients[socket.id] = socket;
+		that.clients[socket.id] = {
+			socket: socket,
+			ship: new Ship()
+		};
 
-		//join event - these are dummy values for now - send to current socket
-		socket.emit(server_event_types.join, {
-			id: "1",
-			color: colors.red,
-			x: 0,
-			y: 0,
-			ships: []
-		});
+		//prep an array of ships to pass around
+		var others = [];
 
 		//tell all the other clients about this client joining
 		for (var client in that.clients) {
 			if (socket.id !== client) {
-				that.clients[client].emit(server_event_types.conn, {
-					id: socket.id,
-					color: colors.red,
-					x: 0,
-					y: 0
-				});
+				that.clients[client].emit(server_event_types.conn, that.clients[socket.id].ship);
+				others.push(that.clients[client].ship);
 			}
 		}
+
+		//join event - these are dummy values for now - send to current socket
+		socket.emit(server_event_types.join, {
+			id: that.clients[socket.id].ship.id,
+			color: that.clients[socket.id].ship.color,
+			x: that.clients[socket.id].ship.x,
+			y: that.clients[socket.id].ship.y,
+			ships: others
+		});
 
 		//all the following event handling code is for this's socket, so one client
 		//each client
@@ -142,10 +151,12 @@ Server.prototype.handleClientEvents = function() {
 			util.log(client_event_types.disconn);
 
 			for (var client in that.clients) {
-				//send the data to all the other clients
-				that.clients[client].emit(server_event_types.diconn, {
-					id: socket.id
-				});
+				if (socket.id !== client) {
+					//send the data to all the other clients
+					that.clients[client].emit(server_event_types.diconn, {
+						id: that.clients[socket.id].ship.id
+					});
+				}
 			}
 
 			//removes the socket.id from the clients object
