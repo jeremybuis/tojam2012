@@ -139,7 +139,7 @@ function createNewPiece () {
 					if (checkBounds(4)) {
 						if (checkCollision(0)) {
 							for(i = 0; i < 4; i++) {
-								currentPiece[i].y+=10;
+								currentPiece[i].move("s",10);
 							}
 						}
 					}
@@ -147,7 +147,7 @@ function createNewPiece () {
 				if (checkBounds(5)) {
 					if (checkCollision(0)) {
 						for(i = 0; i < 4; i++) {
-							currentPiece[i].y+=fallspeed;
+							currentPiece[i].move("s",1);
 						}
 					}
 				}
@@ -161,7 +161,7 @@ function createNewPiece () {
 			}
 			//define piece shape/starting locations
 			for (i = 0; i < 4; i++) {
-				currentPiece[i] = Crafty.e("2D, DOM, color"+currentPieceColors[i]);
+				currentPiece[i] = Crafty.e("2D, DOM, color"+currentPieceColors[i]).attr({h: 30, w: 30});
 				testRotate[i] = Crafty.e("2D");
 				switch(pieceChoice)
 				{
@@ -300,7 +300,7 @@ function createNewPiece () {
 		for (i = 0; i < 11; i++) {
 			for (j = 0; j < 21; j++) {
 				if (localBoard[i][j] >= 1 && localBoard[i][j] <= 4) {
-					board[drawNum] = Crafty.e("2D, DOM, color" + localBoard[i][j]);
+					board[drawNum] = Crafty.e("2D, DOM, color" + localBoard[i][j]).attr({h: 30, w: 30});
 					board[drawNum].x = i*30+XOFFSET;
 					board[drawNum].y = j*30;
 					drawNum++;
@@ -309,7 +309,7 @@ function createNewPiece () {
 		}
 		Crafty("colorwall").destroy();
 		for (i = 0; i < 10; i++) {
-			Crafty.e("2D, DOM, colorwall").attr({x:i*30+XOFFSET, y:600}).origin("top left");
+			Crafty.e("2D, DOM, colorwall").attr({x:i*30+XOFFSET, y:600}).origin("top left").attr({h: 30, w: 30});
 		}
 		banner.destroy();
 		banner = Crafty.e("2D, DOM, Image").image("images/not_ending.png");
@@ -459,7 +459,7 @@ function createNewPiece () {
 				critical.y = 50;
 				Crafty("colorwall").destroy();
 				for (i = 0; i <10; i++) {
-					Crafty.e("2D, DOM, colorwall").attr({x:i*30+XOFFSET, y:600}).origin("top left");
+					Crafty.e("2D, DOM, colorwall").attr({x:i*30+XOFFSET, y:600}).attr({h: 30, w: 30}).origin("top left");
 				}
 				//reform localBoard
 				for (i = 0; i < 11; i++) {
@@ -510,7 +510,7 @@ Crafty.c("tetris",{
 		
 		for (var i = 0; i <10; i++) {
 			Crafty.e("2D, DOM, colorwall")
-			.attr({x:i*30+XOFFSET, y:600}).origin("top left");
+			.attr({x:i*30+XOFFSET, y:600}).origin("top left").attr({h: 30, w: 30});
 		}
 		//function to redraw the currenly placed pieces
 		//check game state vars
@@ -828,7 +828,7 @@ Crafty.scene('game', function() {
 	var ships = {};
 	var bullets = {};
 	
-	Crafty.load(["images/sprite.png"], function() {
+	/*Crafty.load(["images/sprite.png"], function() {
 		//splice the spritemap
 		Crafty.sprite(30, "images/sprite.png", {
 			color1: [0,0],
@@ -838,8 +838,8 @@ Crafty.scene('game', function() {
 			colorwall: [4,0]
 		});
 		//start tetris when loaded
-		tetris = Crafty.e("tetris");
-	});
+		//tetris = Crafty.e("tetris");
+	});*/
 	
 	socket.on('JOIN', function (data) {
 		console.log(data);
@@ -921,7 +921,7 @@ Crafty.scene('game', function() {
 
 window.onload = function() {
 	//start crafty, full screen
-	Crafty.init(WINDOW_WIDTH, WINDOW_HEIGHT);
+	Crafty.init(1200, 800);
 	//tetris initialization
 	//initialize colors
 	for (var x = 0; x < 4; x++) {
