@@ -3,25 +3,11 @@ var util = require('util');
 var express = require('express');
 var sio = require('socket.io');
 
-var colors = {
-	red: "#FF0000",
-	blue: "#0000FF",
-	green: "#008000",
-	yellow: "FFFF00",
-
-	white: "#FFFFFF",
-	black: "#000000",
-
-	silver: "#C0C0C0",
-	grey: "#808080"
-};
-
 var client_event_types = {
 	pos: 'POS',
 	bullet: 'BULLET',
 	bullet_death: 'BULLET_DEATH',
 	death: 'DEATH',
-
 	conn: 'connection',
 	disconn: 'disconnect'
 };
@@ -36,18 +22,45 @@ var server_event_types = {
 	bullet_death: 'BULLET_DEATH'
 };
 
+var nextColor = (function() {
+	var colors = [
+		// {color: "black", code: "#000000"},
+		// {color: "white", code: "#FFFFFF"},
+		{color: "red", code: "#FF0000"},
+		{color: "lime", code: "#00FF00"},
+		{color: "blue", code: "#0000FF"},
+		{color: "yellow", code: "FFFF00"},
+		{color: "cyan", code: "#00FFFF"},
+		{color: "magenta", code: "#FF00FF"},
+		{color: "silver", code: "#C0C0C0"},
+		{color: "gray", code: "#808080"},
+		{color: "maroon", code: "#800000"},
+		{color: "olive", code: "#808000"},
+		{color: "green", code: "#008000"},
+		{color: "purple", code: "#800080"},
+		{color: "teal", code: "#008080"},
+		{color: "navy", code: "#000080"}
+	];
+
+	var start = 0;
+
+	return function() {
+		var index = (start++)%colors.length;
+
+		return colors[index];
+	};
+})();
+
 //
 // Our chip class
 //
 //
 var Ship = (function() {
-
 	var id = 0;	//A static var to keep track of ids
-	var NewShip;
-
+	
 	//This becomes the new constructor
-	NewShip = function() {
-		this.id = id += 1;
+	return function() {
+		this.id = id += 1; //This increments on each new ship being made
 		this.x = 0;
 		this.y = 0;
 		this.theta = 0;
@@ -56,23 +69,21 @@ var Ship = (function() {
 		this.health = 100;
 		this.fuel = 100;
 		this.weapon = 1;
-		this.color = colors.red;
+		this.color = nextColor().code;
 		this.kills = 0;
 		this.deaths = 0;
 	};
+})();
 
-	return NewShip;
-}());
+var millenium_falcon = new Ship();
+var ebon_hawk = new Ship();
+var enterprise = new Ship();
+var voyager = new Ship();
 
-// var millenium_falcon = new Ship();
-// var ebon_hawk = new Ship();
-// var enterprise = new Ship();
-// var voyager = new Ship();
-
-// util.log(util.inspect(millenium_falcon));
-// util.log(util.inspect(ebon_hawk));
-// util.log(util.inspect(enterprise));
-// util.log(util.inspect(voyager));
+util.log(util.inspect(millenium_falcon));
+util.log(util.inspect(ebon_hawk));
+util.log(util.inspect(enterprise));
+util.log(util.inspect(voyager));
 
 
 //
