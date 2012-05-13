@@ -488,16 +488,16 @@ function createNewPiece () {
 	function sendToPlayer(hp, wp, eng, effectMult){
 		//handle pilot info changes here
 		var temp;
-		temp = tetris.playerid.ship.hull + hp/10;
+		temp = tetris.playerid.hull + hp/10;
 		if (temp>1)temp=1;
-		tetris.playerid.ship.hull = temp;
-		temp = tetris.playerid.ship.weap + wp/10;
+		tetris.playerid.hull = temp;
+		temp = tetris.playerid.weap + wp/10;
 		if (temp>1)temp=1;
-		tetris.playerid.ship.wp = temp;
-		temp = tetris.playerid.ship.engine + eng/10;
+		tetris.playerid.wp = temp;
+		temp = tetris.playerid.engine + eng/10;
 		if (temp>1)temp=1;
-		tetris.playerid.ship.eng = temp;
-		console.log(tetris.playerid.ship.hull);
+		tetris.playerid.eng = temp;
+		//console.log(tetris.playerid.hull);
 	}
 	
 Crafty.c("tetris",{
@@ -523,8 +523,6 @@ Crafty.c("tetris",{
 	}
 });
 //end tetris hack-in
-
-
 
 Crafty.c('socket', {
 	initSocket: function(socket) {
@@ -854,6 +852,7 @@ Crafty.scene('game', function() {
 			x: data['x'],
 			y: data['y']			
 		});
+		tetris = Crafty.e("tetris");
 		tetris.setPlayer(player);
 		
 		ships = {};
