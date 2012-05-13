@@ -52,6 +52,26 @@ var nextColor = (function() {
 	};
 })();
 
+var nextPosition = (function() {
+	var positions = [
+		{x: 0, y:0},
+		{x: 500, y:0},
+		{x: 0, y:500},
+		{x: 500, y:500},
+		{x: 1000, y:0},
+		{x:1000, y:1000}
+	];
+
+	var start = 0;
+
+	return function() {
+		//TODO this should be kind of random
+		var index = (start++)%positions.length;
+		return positions[index];
+	};
+
+})();
+
 //
 // Our chip class
 //
@@ -61,9 +81,11 @@ var Ship = (function() {
 	
 	//This becomes the new constructor
 	return function() {
+		var pos = nextPosition();
+
 		this.id = id += 1; //This increments on each new ship being made
-		this.x = 0;
-		this.y = 0;
+		this.x = pos.x;
+		this.y = pos.y;
 		this.theta = 0;
 		this.vx = 0;
 		this.vy = 0;
@@ -118,8 +140,9 @@ Server.prototype.createServer = function(directory, port) {
 		// that.app.use(express.session({secret: 'keyboard cat', key: 'express.sid'}));
 		// that.app.use(express.router);
 		//Handles the static content serving
-		that.app.use(express.staticCache());
-		that.app.use(express.static(directory + '/client'), {maxAge: oneDay});
+		//that.app.use(express.staticCache());
+		//that.app.use(express.static(directory + '/client'), {maxAge: oneDay});
+		that.app.use(express.static(directory + '/client'));
 		//that.app.use(connect.compress());
 
 		// that.app.use(express.errorHandling({showStack:true, dumpExceptions: true}));
@@ -194,20 +217,20 @@ Server.prototype.onClientEvents = function() {
 			util.log(client_event_types.pos);
 
 			//sync our data
-			var currentShip = that.clients[socket.id].ship;
+			// var currentShip = that.clients[socket.id].ship;
 
-			currentShip.x = data.x;
-			currentShip.y = data.y;
-			currentShip.theta = data.theta;
-			currentShip.vx = data.vx;
-			currentShip.vy = data.vy;
-			currentShip.health = data.health;
-			currentShip.fuel = data.fuel;
-			currentShip.weapon = data.weapon;
-			currentShip.kills = data.kills;
-			currentShip.deaths = data.deaths;
+			// currentShip.x = data.x;
+			// currentShip.y = data.y;
+			// currentShip.theta = data.theta;
+			// currentShip.vx = data.vx;
+			// currentShip.vy = data.vy;
+			// currentShip.health = data.health;
+			// currentShip.fuel = data.fuel;
+			// currentShip.weapon = data.weapon;
+			// currentShip.kills = data.kills;
+			// currentShip.deaths = data.deaths;
 
-			that.emitServerEvent(server_event_types.pos, socket, currentShip);
+			that.emitServerEvent(server_event_types.pos, socket, data);
 		});
 
 		//BULLET
