@@ -98,24 +98,6 @@ Crafty.c('ship', {
 			this.weap_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.weap});
 		});
 	},
-	setEngine: function (engine) {
-		if (this.engine != engine) {
-			this.engine = engine;
-			// TODO: update engine GFX
-		}
-	},
-	setHealth: function (health) {
-		if (this.health != health) {
-			this.health = health;
-			// TODO: update health GFX
-		}
-	},
-	setWeapon: function (weapon) {
-		if (this.weapon != weapon) {
-			this.weapon = weapon;
-			// TODO: update weapon GFX
-		}
-	},
 	setColor: function(r, g, b) {
 		this.ship_R.alpha = r * 0.5;
 		this.ship_G.alpha = g * 0.5;
