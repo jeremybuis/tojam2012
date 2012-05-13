@@ -118,7 +118,7 @@ Crafty.c('ship', {
 		return this;
 	},
 	remove: function() {
-		// TODO: handle removal of ship from playing field here
+		// handle removal of ship from playing field here
 		this.ship_R.destroy();
 		this.ship_G.destroy();
 		this.ship_B.destroy();
