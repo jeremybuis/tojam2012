@@ -50,3 +50,7 @@ body {
 .weap_G {
 	background: url('../img/weap_G.png');
 }
+
+.bullet {
+	background: #FFFFFF;
+}
