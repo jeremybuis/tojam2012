@@ -124,7 +124,18 @@ Server.prototype.createServer = function(directory, port) {
 	this.io = sio.listen(this.app);
 };
 
-Server.prototype.handleClientEvents = function() {
+Server.prototype.emitServerEvent = function(type, socket, data) {
+	for (var client in this.clients) {
+		if (this.clients.hasOwnProperty(client)) {
+			if (socket.id !== client) {
+				//send the data to all the other clients
+				this.clients[client].socket.emit(type, data);
+			}
+		}
+	}
+};
+
+Server.prototype.onClientEvents = function() {
 	var that = this;
 
 	this.io.sockets.on(client_event_types.conn, function (socket) {
@@ -148,7 +159,7 @@ Server.prototype.handleClientEvents = function() {
 			}
 		}
 
-		//join event - send to current socket
+		//JOIN - send to current socket
 		socket.emit(server_event_types.join, {
 			id: that.clients[socket.id].ship.id,
 			color: that.clients[socket.id].ship.color,
@@ -160,20 +171,11 @@ Server.prototype.handleClientEvents = function() {
 		//all the following event handling code is for this's socket, so one client
 		//each client
 
+		//DISCONN
 		socket.on(client_event_types.disconn, function (data) {
 			util.log(client_event_types.disconn);
 
-			for (var client in that.clients) {
-				if (that.clients.hasOwnProperty(client)) {
-					if (socket.id !== client) {
-						//send the data to all the other clients
-						that.clients[client].socket.emit(server_event_types.diconn, {
-							id: that.clients[socket.id].ship.id
-						});
-					}
-				}
-			}
-
+			that.emitServerEvent(server_event_types.disconn, socket, {id: that.clients[socket.id].ship.id});
 			//removes the socket.id from the clients object
 			delete that.clients[socket.id];
 		});
@@ -196,56 +198,28 @@ Server.prototype.handleClientEvents = function() {
 			currentShip.kills = data.kills;
 			currentShip.deaths = data.deaths;
 
-			for (var client in that.clients) {
-				if (that.clients.hasOwnProperty(client)) {
-					if (socket.id !== client) {
-						//send the data to all the other clients
-						that.clients[client].socket.emit(server_event_types.pos, currentShip);
-					}
-				}
-			}
+			that.emitServerEvent(server_event_types.pos, socket, currentShip);
 		});
 
 		//BULLET
 		socket.on(client_event_types.bullet, function (data) {
 			util.log(client_event_types.bullet);
 
-			for (var client in that.clients) {
-				if (that.clients.hasOwnProperty(client)) {
-					if (socket.id !== client) {
-						//send the data to all the other clients
-						that.clients[client].socket.emit(server_event_types.bullet, data);
-					}
-				}
-			}
+			that.emitServerEvent(server_event_types.bullet, socket, data);
 		});
 
 		//BULLET DEATH
 		socket.on(client_event_types.bullet_death, function (data) {
 			util.log(client_event_types.bullet_death);
 
-			for (var client in that.clients) {
-				if (that.clients.hasOwnProperty(client)) {
-					if (socket.id !== client) {
-						//send the data to all the other clients
-						that.clients[client].socket.emit(server_event_types.bullet_death, data);
-					}
-				}
-			}
+			that.emitServerEvent(server_event_types.bullet_death, socket, data);
 		});
 
 		//DEATH
 		socket.on(client_event_types.death, function (data) {
 			util.log(client_event_types.death);
 
-			for (var client in that.clients) {
-				if (that.clients.hasOwnProperty(client)) {
-					if (socket.id !== client) {
-						//send the data to all the other clients
-						that.clients[client].socket.emit(server_event_types.death, data);
-					}
-				}
-			}
+			that.emitServerEvent(server_event_types.death, socket, data);
 		});
 	});
 };
@@ -254,7 +228,7 @@ function createServer(dir, port) {
 	var srv = new Server();
 
 	srv.createServer(dir, port);
-	srv.handleClientEvents();
+	srv.onClientEvents();
 }
 
 exports.createServer = createServer;
