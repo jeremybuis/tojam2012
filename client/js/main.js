@@ -97,8 +97,6 @@ Crafty.c('ship', {
 			this.weap_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.weap / 100});
 			this.weap_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.weap / 100});
 		});
-
-		console.log(this);
 	},
 	setEngine: function (engine) {
 		if (this.engine != engine) {
@@ -139,7 +137,6 @@ Crafty.c('player', {
 
 				} else {
 					this.rotation = (this.rotation - 5) % 360;
-					console.log("rotation - 5");
 				}
 			} else {
 				if (this.isDown(CTRL_TURN_CCW)) {
