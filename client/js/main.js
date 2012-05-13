@@ -22,6 +22,7 @@ var BULLET_VEL_INCREASE = 5;
 var MIN_WEAP_POWER = 0.1;
 var MAX_WEAP_POWER_INCREASE = 0.9;
 var WEAP_POWER_DECREASE = 0.1;
+var MAX_HP = 1000;
 
 // Physics constants
 var TIME_CONST = 1;
@@ -145,7 +146,7 @@ Crafty.c('ship', {
 
 Crafty.c('player', {
 	init: function () {
-		this.requires('ship, Keyboard, socket');
+		this.requires('ship, Keyboard, socket, Collision');
 
 		this.attr({
 			bullets: null,
@@ -226,6 +227,27 @@ Crafty.c('player', {
 				}
 			} else if (!this.shoot) {
 				this.shoot = true;
+			}
+
+			var hits = this.hit('bullet');
+			var i;
+			if (hits) {
+				for (i in hits) {
+					var bulletHit = hits[i].obj;
+					if (bulletHit.playerId != this.id) {
+						this.hull = Math.max(this.hull - bulletHit.power / MAX_HP, 0);
+						this.socket.emit('BULLET_DEATH', {id: bulletHit.id});
+						if (this.hull === 0) {
+							this.socket.emit('DEATH', {
+								id: this.id,
+								x: this.x,
+								y: this.y,
+								killingId: bulletHit.playerId
+							});
+						}
+						bulletHit.remove();
+					}
+				}
 			}
 		});
 	},
