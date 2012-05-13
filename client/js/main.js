@@ -15,7 +15,7 @@ var MAX_STAT = 1;
 var START_STAT = 0.5;
 var MAX_TURN_INCREASE = 4.5;
 var MIN_TURN = 0.5;
-var FUEL_DECREASE_TURN = 0.01;
+var FUEL_DECREASE_TURN = 0.001;
 var FUEL_DECREASE_ENGINE = 0.005;
 
 // Physics constants
@@ -146,9 +146,10 @@ Crafty.c('player', {
 		});
 
 		this.bind('EnterFrame', function(e) {
-			var baseAcc = SHIP_MIN_ACCEL + SHIP_MAX_ACCEL_INCREASE * this.engine
+			var baseAcc = SHIP_MIN_ACCEL + SHIP_MAX_ACCEL_INCREASE * this.engine;
 			var rotationRate = MIN_TURN + MAX_TURN_INCREASE * this.engine;
 
+			var acc = 0;
 			if (this.isDown(CTRL_ACCEL)) {
 				acc = baseAcc;
 				this.engine = Math.max(this.engine - FUEL_DECREASE_ENGINE, 0);
