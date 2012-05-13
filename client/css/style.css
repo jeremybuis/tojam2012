@@ -15,3 +15,38 @@ body {
 	margin: 0 auto;
 }
 
+.engine_R {
+	background: url('../img/engine_R.png');
+}
+
+.engine_G {
+	background: url('../img/engine_G.png');
+}
+
+.hull_R {
+	background: url('../img/hull_R.png');
+}
+
+.hull_G {
+	background: url('../img/hull_G.png');
+}
+
+.ship_R {
+	background: url('../img/ship_R.png');
+}
+
+.ship_G {
+	background: url('../img/ship_G.png');
+}
+
+.ship_B {
+	background: url('../img/ship_B.png');
+}
+
+.weap_R {
+	background: url('../img/weap_R.png');
+}
+
+.weap_G {
+	background: url('../img/weap_G.png');
+}
