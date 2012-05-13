@@ -268,8 +268,9 @@ Crafty.scene('game', function() {
 		ships = {};
 		ships[data['id']] = player;
 
-		var ship;
-		for (ship in data['ships']) {
+		var i;
+		for (i in data['ships']) {
+			var ship = data.ships[i];
 			ships[ship['id']] = Crafty.e('ship').ship(
 				ship['id'],
 				ship['color']['r'],
@@ -284,11 +285,8 @@ Crafty.scene('game', function() {
 	});
 
 	socket.on('POS', function (data) {
-		console.log(data);
-		var ship;
-		for (ship in data) {
-			ships[ship['id']].updatePos(ship);
-		}
+		var pos = JSON.parse(data);
+		ships[pos.id].updatePos(pos);
 	});
 
 	socket.on('CONN', function (data) {
