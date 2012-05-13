@@ -202,8 +202,7 @@ Crafty.c('player', {
 				if (this.shoot) {
 					this.shoot = false;
 					var bulletId = this.id + ':' + this.bulletCnt++;
-
-					this.bullets[bulletId] = Crafty.e('bullet').bullet(
+					var bullet = Crafty.e('bullet').bullet(
 						bulletId,
 						this.id,
 						this.x + this.w / 2 + (this.w / 2 + BULLET_RADIUS) * Math.cos(this.rotation * DEG_TO_RAD),
@@ -212,7 +211,18 @@ Crafty.c('player', {
 						this.vy + BULLET_VEL_INCREASE * Math.sin(this.rotation * DEG_TO_RAD),
 						BULLET_MAX_POWER * (this.weap + MIN_WEAP_POWER),
 						this.bullets);
+
+					this.bullets[bulletId] = bullet;
 					this.weap = Math.max(this.weap - WEAP_POWER_DECREASE, 0);
+					this.socket.emit('BULLET', JSON.stringify({
+						id: bullet.id,
+						playerId: bullet.playerId,
+						x: bullet.x,
+						y: bullet.y,
+						vx: bullet.vx,
+						vy: bullet.vy,
+						power: bullet.power
+					}));
 				}
 			} else if (!this.shoot) {
 				this.shoot = true;
@@ -344,6 +354,7 @@ Crafty.scene('game', function() {
 
 	socket.on('BULLET', function (data) {
 		console.log(data);
+		data = JSON.parse(data);
 		bullets[data['id']] = Crafty.e('bullet').bullet(
 			data['id'],
 			data['playerId'],
