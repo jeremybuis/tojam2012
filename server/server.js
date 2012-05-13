@@ -273,7 +273,7 @@ Server.prototype.onClientEvents = function() {
 			};
 
 			//util.debug(util.inspect(data));
-			util.debug(util.inspect(out));
+			//util.debug(util.inspect(out));
 
 			that.emitServerEvent(server_event_types.pos, socket, out);
 		});
