@@ -16,7 +16,7 @@ var START_STAT = 0.5;
 var MAX_TURN_INCREASE = 4.5;
 var MIN_TURN = 0.5;
 var FUEL_DECREASE_TURN = 0.001;
-var FUEL_DECREASE_ENGINE = 0.005;
+var FUEL_DECREASE_ENGINE = 0.0005;
 
 // Physics constants
 var TIME_CONST = 1;
