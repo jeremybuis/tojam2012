@@ -1,19 +1,15 @@
-$(document).ready(function() {
-	var xoffset = 0;
-	var yoffset = 0;
-	
-	Crafty.init(300,630);
-	Crafty.canvas.init();
-	
+//$(document).ready(function() {
+	var XOFFSET=850;
 	//current piece & test rotation
 	var currentPiece = [4];
 	var currentPieceColors = [4];
 	var critical;
 	var banner;
+	var tetris;
 	var testRotate = [4];
 	//currently drawn board
 	var board = [200];
-	//var for placement timer
+	//var for placement
 	var intervalID;
 	var deathcounter = 0;	//use for both speedingup and for respawn timer
 	//tetris board in x, y
@@ -25,58 +21,8 @@ $(document).ready(function() {
 	
 	alive = true;
 	respawnable = false;
-	
-	//initialize colors
-	for (var x = 0; x < 4; x++) {
-		currentPieceColors[x] = 1;
-	}
-	//initialize board
-	for(var y = 0; y < 10; y++) {
-		localBoard[y] = [21];
-	}
-	for (var i = 0; i < 11; i++) {
-		localBoard[i] = []; //init board
-		for (var j = 0; j < 21; j++) {
-			localBoard[i][j] = 0; //set it to empty
-		}
-	}
-	//initialize board
-	for (var k=0; k<200; k++) {
-		board[k] = -1;
-	}
-	
-	//start placement timer, 100ms
-	intervalID = window.setInterval(placeBlocks, 100);
 
-	Crafty.load(["images/sprite.png"], function() {
-		//splice the spritemap
-		Crafty.sprite(30, "images/sprite.png", {
-			color1: [0,0],
-			color2: [1,0],
-			color3: [2,0],
-			color4: [3,0],
-			colorwall: [4,0]
-		});
-		//start the main scene when loaded
-		Crafty.scene("main");
-	});
 	
-	Crafty.scene("main", function () {
-		Crafty.background("url('images/bg.png')");
-		intervalID = window.setInterval(placeBlocks, 100);
-		createNewPiece();
-		
-		for (var i = 0; i <10; i++) {
-			Crafty.e("2D, DOM, colorwall")
-			.attr({x:i*30, y:600}).origin("top left");
-		}
-		//function to redraw the currenly placed pieces
-		//check game state vars
-		banner = Crafty.e("2D, DOM, Image").image("images/not_ending.png");
-		banner.x = 0;
-		banner.y = 0;
-	});
-
 	function createNewPiece () {
 		//currently falling piece
 		//insert a RNG to randomly color pieces
@@ -180,16 +126,16 @@ $(document).ready(function() {
 				switch(pieceChoice)
 				{
 				case 1:		//line
-					currentPiece[i].x=150;
+					currentPiece[i].x=150+XOFFSET;
 					currentPiece[i].y=-90+30*i;
 					break;
 				case 2:		//box
-					currentPiece[i].x = 150 + (i%2)*30;
+					currentPiece[i].x = 150+XOFFSET + (i%2)*30;
 					currentPiece[i].y=-90;
 					if(i>1)currentPiece[i].y=-90+30;
 					break;
 				case 3:		//step up & right
-					currentPiece[i].x=150 + (i%2)*30;
+					currentPiece[i].x=150+XOFFSET + (i%2)*30;
 					currentPiece[i].y=-90;
 					if(i>1){
 						currentPiece[i].y=-90+30;
@@ -197,7 +143,7 @@ $(document).ready(function() {
 					}
 					break;
 				case 4:		//step up and left
-					currentPiece[i].x=150 + (i%2)*30;
+					currentPiece[i].x=150+XOFFSET + (i%2)*30;
 					currentPiece[i].y=-90;
 					if(i>1){
 						currentPiece[i].y=-90+30;
@@ -205,15 +151,15 @@ $(document).ready(function() {
 					}
 					break;
 				case 5:		//L
-					currentPiece[i].x=150 + Math.floor(i/3)*30;
+					currentPiece[i].x=150 + Math.floor(i/3)*30+XOFFSET;
 					currentPiece[i].y=-90+30*i - Math.floor(i/3)*30;
 					break;
 				case 6:		//backwards L
-					currentPiece[i].x=150 - Math.floor(i/3)*30;
+					currentPiece[i].x=150 - Math.floor(i/3)*30+XOFFSET;
 					currentPiece[i].y=-90+30*i - Math.floor(i/3)*30;
 					break;
 				case 7:		//T
-					currentPiece[i].x=150 -30 + i*30 - Math.floor(i/3)*60;
+					currentPiece[i].x=150 -30 + i*30+XOFFSET - Math.floor(i/3)*60;
 					currentPiece[i].y=-90 + Math.floor(i/3)*30;
 					break;
 				}
@@ -234,34 +180,34 @@ $(document).ready(function() {
 		}
 		if (a === 1) {
 			return (
-				localBoard[Math.floor(currentPiece[0]._x/30)+1][Math.floor(currentPiece[0]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[1]._x/30)+1][Math.floor(currentPiece[1]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[2]._x/30)+1][Math.floor(currentPiece[2]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[3]._x/30)+1][Math.floor(currentPiece[3]._y/30)] === 0
+				localBoard[Math.floor((currentPiece[0]._x-XOFFSET)/30)+1][Math.floor(currentPiece[0]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[1]._x-XOFFSET)/30)+1][Math.floor(currentPiece[1]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[2]._x-XOFFSET)/30)+1][Math.floor(currentPiece[2]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[3]._x-XOFFSET)/30)+1][Math.floor(currentPiece[3]._y/30)] === 0
 				);
 		}
 		if (a === -1) {
 			return (
-				localBoard[Math.floor(currentPiece[0]._x/30)-1][Math.floor(currentPiece[0]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[1]._x/30)-1][Math.floor(currentPiece[1]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[2]._x/30)-1][Math.floor(currentPiece[2]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[3]._x/30)-1][Math.floor(currentPiece[3]._y/30)] === 0
+				localBoard[Math.floor((currentPiece[0]._x-XOFFSET)/30)-1][Math.floor(currentPiece[0]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[1]._x-XOFFSET)/30)-1][Math.floor(currentPiece[1]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[2]._x-XOFFSET)/30)-1][Math.floor(currentPiece[2]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[3]._x-XOFFSET)/30)-1][Math.floor(currentPiece[3]._y/30)] === 0
 			);
 		}
 		if (a === 0) {
 			return (
-				localBoard[Math.floor(currentPiece[0]._x/30)][Math.ceil(currentPiece[0]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[1]._x/30)][Math.ceil(currentPiece[1]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[2]._x/30)][Math.ceil(currentPiece[2]._y/30)] === 0 &&
-				localBoard[Math.floor(currentPiece[3]._x/30)][Math.ceil(currentPiece[3]._y/30)] === 0
+				localBoard[Math.floor((currentPiece[0]._x-XOFFSET)/30)][Math.ceil(currentPiece[0]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[1]._x-XOFFSET)/30)][Math.ceil(currentPiece[1]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[2]._x-XOFFSET)/30)][Math.ceil(currentPiece[2]._y/30)] === 0 &&
+				localBoard[Math.floor((currentPiece[3]._x-XOFFSET)/30)][Math.ceil(currentPiece[3]._y/30)] === 0
 			);
 		}
 		if (a === 2) {
 			return (
-				localBoard[Math.floor(testRotate[0]._x/30)][Math.ceil(testRotate[0]._y/30)] === 0 &&
-				localBoard[Math.floor(testRotate[1]._x/30)][Math.ceil(testRotate[1]._y/30)] === 0 &&
-				localBoard[Math.floor(testRotate[2]._x/30)][Math.ceil(testRotate[2]._y/30)] === 0 &&
-				localBoard[Math.floor(testRotate[3]._x/30)][Math.ceil(testRotate[3]._y/30)] === 0
+				localBoard[Math.floor((testRotate[0]._x-XOFFSET)/30)][Math.ceil(testRotate[0]._y/30)] === 0 &&
+				localBoard[Math.floor((testRotate[1]._x-XOFFSET)/30)][Math.ceil(testRotate[1]._y/30)] === 0 &&
+				localBoard[Math.floor((testRotate[2]._x-XOFFSET)/30)][Math.ceil(testRotate[2]._y/30)] === 0 &&
+				localBoard[Math.floor((testRotate[3]._x-XOFFSET)/30)][Math.ceil(testRotate[3]._y/30)] === 0
 			);
 		}
 		// handle rotation
@@ -269,18 +215,18 @@ $(document).ready(function() {
 	function checkBounds(a){
 		//1 right, 2 left, 3 rotation, 4 drop, 5 fallspeed
 		if (a === 1) {
-			return (currentPiece[0]._x +30) <= 300-1 && (currentPiece[1]._x +30)  <= 300-1 &&
-			(currentPiece[2]._x +30)  <= 300-1 && (currentPiece[3]._x +30)  <= 300-1;
+			return (currentPiece[0]._x-XOFFSET +30) <= 300-1 && (currentPiece[1]._x-XOFFSET +30)  <= 300-1 &&
+			(currentPiece[2]._x-XOFFSET +30)  <= 300-1 && (currentPiece[3]._x-XOFFSET +30)  <= 300-1;
 		}
 		if (a === 2) {
-			return (currentPiece[0]._x -30) > -1 && (currentPiece[1]._x -30) > -1 &&
-			(currentPiece[2]._x -30) > -1 && (currentPiece[3]._x -30) > -1;
+			return (currentPiece[0]._x-XOFFSET -30) > -1 && (currentPiece[1]._x-XOFFSET -30) > -1 &&
+			(currentPiece[2]._x-XOFFSET -30) > -1 && (currentPiece[3]._x-XOFFSET -30) > -1;
 		}
 		if (a === 3) {
-			return (testRotate[0]._x) <= 300-1 && (testRotate[1]._x)  <= 300-1 &&
-			(testRotate[2]._x)  <= 300-1 && (testRotate[3]._x)  <= 300-1 &&
-			(testRotate[0]._x) > -1 && (testRotate[1]._x) > -1 &&
-			(testRotate[2]._x) > -1 && (testRotate[3]._x) > -1;
+			return (testRotate[0]._x-XOFFSET) <= 300-1 && (testRotate[1]._x-XOFFSET)  <= 300-1 &&
+			(testRotate[2]._x-XOFFSET)  <= 300-1 && (testRotate[3]._x-XOFFSET)  <= 300-1 &&
+			(testRotate[0]._x-XOFFSET) > -1 && (testRotate[1]._x-XOFFSET) > -1 &&
+			(testRotate[2]._x-XOFFSET) > -1 && (testRotate[3]._x-XOFFSET) > -1;
 		}
 		if (a === 4) {
 			return (currentPiece[0]._y + 40 && currentPiece[1]._y + 40 &&
@@ -315,7 +261,7 @@ $(document).ready(function() {
 			for (j = 0; j < 21; j++) {
 				if (localBoard[i][j] >= 1 && localBoard[i][j] <= 4) {
 					board[drawNum] = Crafty.e("2D, DOM, color" + localBoard[i][j]);
-					board[drawNum].x = i*30;
+					board[drawNum].x = i*30+XOFFSET;
 					board[drawNum].y = j*30;
 					drawNum++;
 				}
@@ -323,11 +269,11 @@ $(document).ready(function() {
 		}
 		Crafty("colorwall").destroy();
 		for (i = 0; i < 10; i++) {
-			Crafty.e("2D, DOM, colorwall").attr({x:i*30, y:600}).origin("top left");
+			Crafty.e("2D, DOM, colorwall").attr({x:i*30+XOFFSET, y:600}).origin("top left");
 		}
 		banner.destroy();
 		banner = Crafty.e("2D, DOM, Image").image("images/not_ending.png");
-		banner.x = 0;
+		banner.x = XOFFSET;
 		banner.y = 0;
 	}
 
@@ -380,10 +326,10 @@ $(document).ready(function() {
 
 		//continue
 		//if any currentPiece[i]'s x, y+30 are equal to a
-		} else if (localBoard[Math.floor(currentPiece[0]._x/30)][Math.ceil(currentPiece[0]._y/30)] !== 0 ||
-			localBoard[Math.floor(currentPiece[1]._x/30)][Math.ceil(currentPiece[1]._y/30)] !== 0 ||
-			localBoard[Math.floor(currentPiece[2]._x/30)][Math.ceil(currentPiece[2]._y/30)] !== 0 ||
-			localBoard[Math.floor(currentPiece[3]._x/30)][Math.ceil(currentPiece[3]._y/30)] !== 0) {
+		} else if (localBoard[Math.floor((currentPiece[0]._x-XOFFSET)/30)][Math.ceil(currentPiece[0]._y/30)] !== 0 ||
+			localBoard[Math.floor((currentPiece[1]._x-XOFFSET)/30)][Math.ceil(currentPiece[1]._y/30)] !== 0 ||
+			localBoard[Math.floor((currentPiece[2]._x-XOFFSET)/30)][Math.ceil(currentPiece[2]._y/30)] !== 0 ||
+			localBoard[Math.floor((currentPiece[3]._x-XOFFSET)/30)][Math.ceil(currentPiece[3]._y/30)] !== 0) {
 			
 			a = 1;
 		}
@@ -406,7 +352,7 @@ $(document).ready(function() {
 		var i;
 
 		for (i = 0; i < 4; i++) {
-			localBoard[Math.floor(currentPiece[i]._x/30)][Math.floor(currentPiece[i]._y/30)]=currentPieceColors[i];
+			localBoard[Math.floor((currentPiece[i]._x-XOFFSET)/30)][Math.floor(currentPiece[i]._y/30)]=currentPieceColors[i];
 			rowsToCheck[i] = Math.floor(currentPiece[i]._y/30);
 		}
 		//do a quick sort of rowsToCheck
@@ -469,11 +415,11 @@ $(document).ready(function() {
 			if (localBoard[i][0] !== 0) {
 				//display !critical systems failure! resetting system ...
 				critical = Crafty.e("2D, DOM, Image").image("images/critical.png");
-				critical.x = 50;
+				critical.x = 50+XOFFSET;
 				critical.y = 50;
 				Crafty("colorwall").destroy();
 				for (i = 0; i <10; i++) {
-					Crafty.e("2D, DOM, colorwall").attr({x:i*30, y:600}).origin("top left");
+					Crafty.e("2D, DOM, colorwall").attr({x:i*30+XOFFSET, y:600}).origin("top left");
 				}
 				//reform localBoard
 				for (i = 0; i < 11; i++) {
@@ -492,22 +438,7 @@ $(document).ready(function() {
 		}
 	}
 	function pilotDied() {
-		var i;
-		//display !Pilot has died! You are dead ...
-		critical = Crafty.e("2D, DOM, Image").image("images/critical.png");
-		critical.x = 50;
-		critical.y = 50;
-		Crafty("colorwall").destroy();
-		for (i = 0; i <10; i++) {
-			Crafty.e("2D, DOM, colorwall").attr({x:i*30, y:600}).origin("top left");
-		}
-		//reform localBoard
-		for (i = 0; i < 11; i++) {
-			localBoard[i] = []; //init board
-			for (var j = 0; j < 21; j++) {
-				localBoard[i][j] = 0; //set it to empty
-			}
-		}
+		checkLose();
 		alive = false;
 		respawnable = false;
 		deathcounter = 0;
@@ -516,5 +447,70 @@ $(document).ready(function() {
 	}
 	function sendToPlayer(hp, wp, eng, effectMult){
 		//handle pilot info changes here
+		//tetris.playerid.ship.hull+=hp
+		//tetris.playerid.ship.weap+=wp
+		//tetris.playerid.ship.engine+=eng
+	}
+
+window.onload = function() {
+	Crafty.init(1200,800);
+	Crafty.canvas.init();
+
+		//initialize colors
+	for (var x = 0; x < 4; x++) {
+		currentPieceColors[x] = 1;
+	}
+	//initialize board
+	for(var y = 0; y < 10; y++) {
+		localBoard[y] = [21];
+	}
+	for (var i = 0; i < 11; i++) {
+		localBoard[i] = []; //init board
+		for (var j = 0; j < 21; j++) {
+			localBoard[i][j] = 0; //set it to empty
+		}
+	}
+	//initialize board
+	for (var k=0; k<200; k++) {
+		board[k] = -1;
+	}
+	Crafty.load(["images/sprite.png"], function() {
+		//splice the spritemap
+		Crafty.sprite(30, "images/sprite.png", {
+			color1: [0,0],
+			color2: [1,0],
+			color3: [2,0],
+			color4: [3,0],
+			colorwall: [4,0]
+		});
+		//start the main scene when loaded
+		Crafty.scene("main");
+	});
+	
+	Crafty.scene("main", function () {
+		tetris = Crafty.e("tetris");
+	});
+}
+
+Crafty.c("tetris",{
+	init:function(){
+		this.attr({playerid:null});
+		Crafty.e("2D, DOM, Image").image("images/bg.png","repeat")
+			.attr({w: 300, h: 600, x:XOFFSET, y:0});
+		intervalID = window.setInterval(placeBlocks, 100);
+		createNewPiece();
+		
+		for (var i = 0; i <10; i++) {
+			Crafty.e("2D, DOM, colorwall")
+			.attr({x:i*30+XOFFSET, y:600}).origin("top left");
+		}
+		//function to redraw the currenly placed pieces
+		//check game state vars
+		banner = Crafty.e("2D, DOM, Image").image("images/not_ending.png");
+		banner.x = XOFFSET;
+		banner.y = 0;
+	},
+	setPlayer:function(){
+		this.playerid	= id;
 	}
 });
