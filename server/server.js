@@ -223,7 +223,7 @@ Server.prototype.respawn = function(socket) {
 
 	for (var client in this.clients) {
 		if (this.clients.hasOwnProperty(client)) {
-			client.socket.emit(server_event_types.pos, out);
+			this.clients[client].socket.emit(server_event_types.pos, out);
 		}
 	}
 };
