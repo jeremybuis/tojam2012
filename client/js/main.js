@@ -320,8 +320,7 @@ Crafty.scene('game', function() {
 	});
 
 	socket.on('POS', function (data) {
-		var pos = JSON.parse(data);
-		ships[pos.id].updatePos(pos);
+		ships[data.id].updatePos(data);
 	});
 
 	socket.on('CONN', function (data) {
