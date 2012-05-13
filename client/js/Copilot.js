@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	var xoffset=0;
-	var yoffset=0;
+	var xoffset = 0;
+	var yoffset = 0;
 	
 	Crafty.init(300,630);
 	Crafty.canvas.init();

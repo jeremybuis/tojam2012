@@ -1,6 +1,6 @@
 var util = require('util');
 
-var connect = require('connect');
+//var connect = require('connect');
 var express = require('express');
 var sio = require('socket.io');
 
@@ -120,7 +120,7 @@ Server.prototype.createServer = function(directory, port) {
 		//Handles the static content serving
 		that.app.use(express.staticCache());
 		that.app.use(express.static(directory + '/client'), {maxAge: oneDay});
-		that.app.use(connect.compress());
+		//that.app.use(connect.compress());
 
 		// that.app.use(express.errorHandling({showStack:true, dumpExceptions: true}));
 	});
