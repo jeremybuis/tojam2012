@@ -320,9 +320,9 @@ function createNewPiece () {
 	function placeBlocks(){
 		//handle speedups, respawns here
 		deathcounter++;
-		if (deathcounter%100 === 0) {
+		/*if (deathcounter%100 === 0) {
 			console.log(deathcounter);
-		}
+		}*/
 		if (alive === true) {
 			if (deathcounter === 600) {
 				fallspeed = 2;
@@ -491,13 +491,17 @@ function createNewPiece () {
 		temp = tetris.playerid.hull + hp/10;
 		if (temp>1)temp=1;
 		tetris.playerid.hull = temp;
+		//console.log(tetris.playerid.hull);
+		
 		temp = tetris.playerid.weap + wp/10;
 		if (temp>1)temp=1;
-		tetris.playerid.wp = temp;
+		tetris.playerid.weap = temp;
+		//console.log(tetris.playerid.wp);
+		
 		temp = tetris.playerid.engine + eng/10;
 		if (temp>1)temp=1;
-		tetris.playerid.eng = temp;
-		//console.log(tetris.playerid.hull);
+		tetris.playerid.engine = temp;
+		//console.log(tetris.playerid.eng);
 	}
 	
 Crafty.c("tetris",{
