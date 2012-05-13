@@ -148,14 +148,14 @@ Crafty.c('player', {
 			var rotationRate = MIN_TURN + MAX_TURN_INCREASE * this.engine;
 			if (this.isDown(CTRL_TURN_CW)) {
 				if (this.isDown(CTRL_TURN_CCW)) {
-					this.engine -= FUEL_DECREASE_TURN * 2;
+					this.engine = Math.max(this.engine - FUEL_DECREASE_TURN * 2, 0);
 				} else {
-					this.engine -= FUEL_DECREASE_TURN;
+					this.engine = Math.max(this.engine - FUEL_DECREASE_TURN, 0);
 					this.rotation = (this.rotation - rotationRate) % 360;
 				}
 			} else {
 				if (this.isDown(CTRL_TURN_CCW)) {
-					this.engine -= FUEL_DECREASE_TURN;
+					this.engine = Math.max(this.engine - FUEL_DECREASE_TURN, 0);
 					this.rotation = (this.rotation + rotationRate) % 360;
 				}
 			}
