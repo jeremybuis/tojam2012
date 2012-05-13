@@ -74,11 +74,14 @@ var nextColor = (function() {
 var nextPosition = (function() {
 	var positions = [
 		{x: 0, y:0},
+		
 		{x: 500, y:0},
 		{x: 0, y:500},
 		{x: 500, y:500},
-		{x: 1000, y:0},
-		{x:1000, y:1000}
+
+		{x: 250, y:0},
+		{x: 0, y:250},
+		{x:250, y:250}
 	];
 
 	var start = 0;
@@ -189,7 +192,7 @@ Server.prototype.onClientEvents = function() {
 	var that = this;
 
 	this.io.sockets.on(client_event_types.conn, function (socket) {
-		util.log(client_event_types.conn);
+		//util.log(client_event_types.conn);
 
 		that.clients[socket.id] = {
 			socket: socket,
