@@ -488,17 +488,17 @@ function createNewPiece () {
 	function sendToPlayer(hp, wp, eng, effectMult){
 		//handle pilot info changes here
 		var temp;
-		temp = tetris.playerid.hull + hp/10;
+		temp = tetris.playerid.hull + hp/20;
 		if (temp>1)temp=1;
 		tetris.playerid.hull = temp;
 		//console.log(tetris.playerid.hull);
 		
-		temp = tetris.playerid.weap + wp/10;
+		temp = tetris.playerid.weap + wp/20;
 		if (temp>1)temp=1;
 		tetris.playerid.weap = temp;
 		//console.log(tetris.playerid.wp);
 		
-		temp = tetris.playerid.engine + eng/10;
+		temp = tetris.playerid.engine + eng/20;
 		if (temp>1)temp=1;
 		tetris.playerid.engine = temp;
 		//console.log(tetris.playerid.eng);
