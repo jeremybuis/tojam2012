@@ -203,7 +203,7 @@ Server.prototype.emitServerEvent = function(type, socket, data) {
 };
 
 Server.prototype.respawn = function(socket) {
-	var currentShip = that.clients[socket.id].ship;
+	var currentShip = this.clients[socket.id].ship;
 
 	currentShip.resetShip();
 
@@ -221,8 +221,8 @@ Server.prototype.respawn = function(socket) {
 		deaths: currentShip.deaths
 	};
 
-	for (var client in that.clients) {
-		if (that.clients.hasOwnProperty(client)) {
+	for (var client in this.clients) {
+		if (this.clients.hasOwnProperty(client)) {
 			client.socket.emit(server_event_types.pos, out);
 		}
 	}
@@ -324,7 +324,7 @@ Server.prototype.onClientEvents = function() {
 
 		//DEATH
 		socket.on(client_event_types.death, function (data) {
-			//util.log(client_event_types.death);
+			util.log(client_event_types.death);
 
 			var dead = data.id;
 			var killer = data.killingId;
