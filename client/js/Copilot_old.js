@@ -42,7 +42,7 @@ $(document).ready(function() {
 				.origin("top left")
 				.bind("KeyDown", function(e) {
 					//on keydown, set the move booleans
-					if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
+					if (e.keyCode === Crafty.keys.RIGHT_ARROW) {
 						this.move.right = true;
 					} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
 						this.move.left = true;
@@ -53,21 +53,21 @@ $(document).ready(function() {
 					}
 				}).bind("KeyUp", function(e) {
 					//on key up, set the move booleans to false
-					if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
+					if (e.keyCode === Crafty.keys.RIGHT_ARROW) {
 						this.move.right = false;
-					} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
+					} else if (e.keyCode === Crafty.keys.LEFT_ARROW) {
 						this.move.left = false;
-					} else if(e.keyCode === Crafty.keys.UP_ARROW) {
+					} else if (e.keyCode === Crafty.keys.UP_ARROW) {
 						this.move.rotate = false;
-					} else if(e.keyCode === Crafty.keys.SPACE) {
+					} else if (e.keyCode === Crafty.keys.SPACE) {
 						this.move.drop = false;
 					}
 				}).bind("EnterFrame", function() {
 					if (this.move.right) {
-						if((currentPiece[0]._x +30) <= Crafty.viewport.width-1 &&
-						(currentPiece[1]._x +30)  <= Crafty.viewport.width-1 &&
-						(currentPiece[2]._x +30)  <= Crafty.viewport.width-1 &&
-						(currentPiece[3]._x +30)  <= Crafty.viewport.width-1) {
+						if ((currentPiece[0]._x +30) <= Crafty.viewport.width-1 &&
+							(currentPiece[1]._x +30)  <= Crafty.viewport.width-1 &&
+							(currentPiece[2]._x +30)  <= Crafty.viewport.width-1 &&
+							(currentPiece[3]._x +30)  <= Crafty.viewport.width-1) {
 
 							this.x += 30;
 							this.move.right = false;
@@ -102,46 +102,47 @@ $(document).ready(function() {
 				});
 				
 				//define piece locations
-				switch(pieceChoice)
-				{
+				switch(pieceChoice) {
 				case 1:		//line
-					currentPiece[i].x=Crafty.viewport.width/2;
-					currentPiece[i].y=30*i;
+					currentPiece[i].x = Crafty.viewport.width/2;
+					currentPiece[i].y = 30*i;
 					break;
 				case 2:		//box
 					currentPiece[i].x = Crafty.viewport.width/2 + (i%2)*30;
-					currentPiece[i].y=0;
-					if(i>1)currentPiece[i].y=30;
+					currentPiece[i].y = 0;
+					if (i > 1) {
+						currentPiece[i].y = 30;
+					}
 					break;
 				case 3:		//step up & right
-					currentPiece[i].x=Crafty.viewport.width/2 + (i%2)*30;
-					currentPiece[i].y=0;
-					if(i>1){
-						currentPiece[i].y=30;
-						currentPiece[i].x-=30;
+					currentPiece[i].x = Crafty.viewport.width/2 + (i%2)*30;
+					currentPiece[i].y = 0;
+					if (i > 1) {
+						currentPiece[i].y = 30;
+						currentPiece[i].x -= 30;
 					}
 					break;
 				case 4:		//step up and left
-					currentPiece[i].x=Crafty.viewport.width/2 + (i%2)*30;
-					currentPiece[i].y=0;
-					if(i>1){
-						currentPiece[i].y=30;
-						currentPiece[i].x+=30;
+					currentPiece[i].x = Crafty.viewport.width/2 + (i%2)*30;
+					currentPiece[i].y = 0;
+					if (i > 1) {
+						currentPiece[i].y = 30;
+						currentPiece[i].x += 30;
 					}
 					break;
 				case 5:		//L
-					currentPiece[i].x=Crafty.viewport.width/2 + Math.floor(i/3)*30;
-					currentPiece[i].y=30*i - Math.floor(i/3)*30;
+					currentPiece[i].x = Crafty.viewport.width/2 + Math.floor(i/3)*30;
+					currentPiece[i].y = 30*i - Math.floor(i/3)*30;
 					break;
 				case 6:		//backwards L
-					currentPiece[i].x=Crafty.viewport.width/2 - Math.floor(i/3)*30;
-					currentPiece[i].y=30*i - Math.floor(i/3)*30;
+					currentPiece[i].x = Crafty.viewport.width/2 - Math.floor(i/3)*30;
+					currentPiece[i].y = 30*i - Math.floor(i/3)*30;
 					break;
 				}
 			}
-		for (var i=0; i<10; i++) {
+		for (var j=0; j<10; j++) {
 			Crafty.e("2D, DOM, colorwall, Collision")
-			.attr({x:i*30, y:600}).origin("top left");
+			.attr({x:j*30, y:600}).origin("top left");
 		}
 		//function to redraw the currenly placed pieces
 		//check game state vars
