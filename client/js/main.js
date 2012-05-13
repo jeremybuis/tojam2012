@@ -25,8 +25,8 @@ var FIELD_HEIGHT = 800;
 // Ship constants
 var SHIP_RADIUS = 50;
 var SHIP_MAX_ACCEL = 0.1;
-var MAX_STAT = 100;
-var START_STAT = 100;
+var MAX_STAT = 1;
+var START_STAT = 0.5;
 
 // Physics constants
 var TIME_CONST = 1;
@@ -90,12 +90,12 @@ Crafty.c('ship', {
 			this.ship_R.attr({x: this.x, y: this.y, rotation: this.rotation});
 			this.ship_G.attr({x: this.x, y: this.y, rotation: this.rotation});
 			this.ship_B.attr({x: this.x, y: this.y, rotation: this.rotation});
-			this.engine_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.engine / 100});
-			this.engine_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.engine / 100});
-			this.hull_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.hull / 100});
-			this.hull_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.hull / 100});
-			this.weap_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.weap / 100});
-			this.weap_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.weap / 100});
+			this.engine_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.engine});
+			this.engine_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.engine});
+			this.hull_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.hull});
+			this.hull_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.hull});
+			this.weap_R.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: 1 - this.weap});
+			this.weap_G.attr({x: this.x, y: this.y, rotation: this.rotation, alpha: this.weap});
 		});
 	},
 	setEngine: function (engine) {
