@@ -341,7 +341,7 @@ Server.prototype.onClientEvents = function() {
 				}
 			}
 
-			that.respawn();
+			that.respawn(socket);
 
 			//simply repeat out to the other clients that a player has died
 			that.emitServerEvent(server_event_types.death, socket, data);
