@@ -9,12 +9,14 @@ var FIELD_HEIGHT = 800;
 // Ship constants
 var SHIP_RADIUS = 50;
 var BULLET_RADIUS = 5;
-var SHIP_MAX_ACCEL = 0.1;
+var SHIP_MAX_ACCEL_INCREASE = 0.09;
+var SHIP_MIN_ACCEL = 0.01;
 var MAX_STAT = 1;
 var START_STAT = 0.5;
 var MAX_TURN_INCREASE = 4.5;
 var MIN_TURN = 0.5;
 var FUEL_DECREASE_TURN = 0.01;
+var FUEL_DECREASE_ENGINE = 0.005;
 
 // Physics constants
 var TIME_CONST = 1;
@@ -144,8 +146,18 @@ Crafty.c('player', {
 		});
 
 		this.bind('EnterFrame', function(e) {
-			// TODO: drain fuel here and variable turn rate
+			var baseAcc = SHIP_MIN_ACCEL + SHIP_MAX_ACCEL_INCREASE * this.engine
 			var rotationRate = MIN_TURN + MAX_TURN_INCREASE * this.engine;
+
+			if (this.isDown(CTRL_ACCEL)) {
+				acc = baseAcc;
+				this.engine = Math.max(this.engine - FUEL_DECREASE_ENGINE, 0);
+			}
+			if (this.isDown(CTRL_DECEL)) {
+				acc -= baseAcc /2;
+				this.engine = Math.max(this.engine - FUEL_DECREASE_ENGINE, 0);
+			}
+
 			if (this.isDown(CTRL_TURN_CW)) {
 				if (this.isDown(CTRL_TURN_CCW)) {
 					this.engine = Math.max(this.engine - FUEL_DECREASE_TURN * 2, 0);
@@ -158,16 +170,6 @@ Crafty.c('player', {
 					this.engine = Math.max(this.engine - FUEL_DECREASE_TURN, 0);
 					this.rotation = (this.rotation + rotationRate) % 360;
 				}
-			}
-
-			var acc = 0;
-			if (this.isDown(CTRL_ACCEL)) {
-				acc = SHIP_MAX_ACCEL;
-				// TODO: drain fuel here and vary accel
-			}
-			if (this.isDown(CTRL_DECEL)) {
-				acc -= SHIP_MAX_ACCEL / 2;
-				// TODO: drain fuel here and vary accel
 			}
 
 			this.ax = acc * Math.cos(this.rotation * DEG_TO_RAD);
