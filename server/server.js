@@ -1,5 +1,6 @@
 var util = require('util');
 
+var connect = require('connect');
 var express = require('express');
 var sio = require('socket.io');
 
@@ -75,15 +76,15 @@ var Ship = (function() {
 	};
 })();
 
-var millenium_falcon = new Ship();
-var ebon_hawk = new Ship();
-var enterprise = new Ship();
-var voyager = new Ship();
+// var millenium_falcon = new Ship();
+// var ebon_hawk = new Ship();
+// var enterprise = new Ship();
+// var voyager = new Ship();
 
-util.log(util.inspect(millenium_falcon));
-util.log(util.inspect(ebon_hawk));
-util.log(util.inspect(enterprise));
-util.log(util.inspect(voyager));
+// util.log(util.inspect(millenium_falcon));
+// util.log(util.inspect(ebon_hawk));
+// util.log(util.inspect(enterprise));
+// util.log(util.inspect(voyager));
 
 
 //
@@ -99,6 +100,7 @@ function Server() {
 
 Server.prototype.debug = function() {
 	//do something useful ;)
+	util.debug('funtimes');
 };
 
 Server.prototype.createServer = function(directory, port) {
@@ -107,15 +109,20 @@ Server.prototype.createServer = function(directory, port) {
 	this.app = express.createServer();
 
 	this.app.configure(function() {
-		//Handles the static content serving
-		that.app.use(express.static(directory + '/client'));
-		
+		var oneDay = 86400000;
+		var oneYear = 31557600000;
+
+		// that.app.use(express.logger());
 		// that.app.use(express.bodyParser());
 		// that.app.use(express.cookieParser());
-		// that.app.use(express.session({secret: 'secret', key: 'express.sid'}));
-		// app.use(function(req, res) {
-		// 	res.end('<h2>Hello, your session id is ' + req.sessionID + '</h2>');
-		// });
+		// that.app.use(express.session({secret: 'keyboard cat', key: 'express.sid'}));
+		// that.app.use(express.router);
+		//Handles the static content serving
+		that.app.use(express.staticCache());
+		that.app.use(express.static(directory + '/client'), {maxAge: oneDay});
+		that.app.use(connect.compress());
+
+		// that.app.use(express.errorHandling({showStack:true, dumpExceptions: true}));
 	});
 
 	this.clients = {};
@@ -124,6 +131,7 @@ Server.prototype.createServer = function(directory, port) {
 	this.io = sio.listen(this.app);
 };
 
+//updates everyone but the current socket
 Server.prototype.emitServerEvent = function(type, socket, data) {
 	for (var client in this.clients) {
 		if (this.clients.hasOwnProperty(client)) {
@@ -135,6 +143,7 @@ Server.prototype.emitServerEvent = function(type, socket, data) {
 	}
 };
 
+//handles incoming connections and other client side events
 Server.prototype.onClientEvents = function() {
 	var that = this;
 
