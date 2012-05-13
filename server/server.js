@@ -107,17 +107,30 @@ var Ship = (function() {
 		this.id = id += 1; //This increments on each new ship being made
 		this.x = pos.x;
 		this.y = pos.y;
-		this.theta = 0;
+		this.theta = -90;
 		this.vx = 0;
 		this.vy = 0;
-		this.health = 100;
-		this.fuel = 100;
-		this.weapon = 1;
+		this.health = 0.5;
+		this.fuel = 0.5;
+		this.weapon = 0.5;
 		this.color = nextColor().rgb;
 		this.kills = 0;
 		this.deaths = 0;
 	};
 })();
+
+Ship.prototype.resetShip = function() {
+	var position = nextPosition();
+
+	this.x = position.x;
+	this.y = position.y;
+	this.theta = -50;
+	this.vx = 0;
+	this.vy = 0;
+	this.health = 0.5;
+	this.fuel = 0.5;
+	this.weapon = 0.5;
+};
 
 // var millenium_falcon = new Ship();
 // var ebon_hawk = new Ship();
@@ -172,7 +185,9 @@ Server.prototype.createServer = function(directory, port) {
 	this.clients = {};
 
 	this.app.listen(port);
+
 	this.io = sio.listen(this.app);
+	this.io.set('log level', 1);
 };
 
 //updates everyone but the current socket
@@ -183,6 +198,32 @@ Server.prototype.emitServerEvent = function(type, socket, data) {
 				//send the data to all the other clients
 				this.clients[client].socket.emit(type, data);
 			}
+		}
+	}
+};
+
+Server.prototype.respawn = function(socket) {
+	var currentShip = that.clients[socket.id].ship;
+
+	currentShip.resetShip();
+
+	var out = {
+		id: currentShip.id,
+		x: currentShip.x,
+		y: currentShip.y,
+		theta: currentShip.theta,
+		vx: currentShip.vx,
+		vy: currentShip.vy,
+		health: currentShip.health,
+		fuel: currentShip.fuel,
+		weapon: currentShip.weapon,
+		kills: currentShip.kills,
+		deaths: currentShip.deaths
+	};
+
+	for (var client in that.clients) {
+		if (that.clients.hasOwnProperty(client)) {
+			client.socket.emit(server_event_types.pos, out);
 		}
 	}
 };
@@ -291,13 +332,16 @@ Server.prototype.onClientEvents = function() {
 			//update the kill death counters
 			for (var client in that.clients) {
 				if (that.clients.hasOwnProperty(client)) {
-					if (killer === clients[client].ship.id) {
+					if (killer === that.clients[client].ship.id) {
 						that.clients[client].ship.kills += 1;
-					} else if (dead === clients[client].ship.id) {
+					}
+					if (dead === that.clients[client].ship.id) {
 						that.clients[client].ship.deaths += 1;
 					}
 				}
 			}
+
+			that.respawn();
 
 			//simply repeat out to the other clients that a player has died
 			that.emitServerEvent(server_event_types.death, socket, data);
