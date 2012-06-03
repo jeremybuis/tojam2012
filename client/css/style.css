@@ -1,0 +1,104 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+body {
+	background: #000;
+	margin: 50px;
+	color: #F00;
+	font-size:20px;
+	font-family: monospace;
+}
+a:link {
+	color: #F073;
+}
+
+a:visited {
+	color: #F073;
+}
+
+#cr-stage {
+	background: #333;
+	margin: 0 auto;
+}
+
+.engine_R {
+	background: url('../img/engine_R.png');
+}
+
+.engine_G {
+	background: url('../img/engine_G.png');
+}
+
+.hull_R {
+	background: url('../img/hull_R.png');
+}
+
+.hull_G {
+	background: url('../img/hull_G.png');
+}
+
+.ship_R {
+	background: url('../img/ship_R.png');
+}
+
+.ship_G {
+	background: url('../img/ship_G.png');
+}
+
+.ship_B {
+	background: url('../img/ship_B.png');
+}
+
+.weap_R {
+	background: url('../img/weap_R.png');
+}
+
+.weap_G {
+	background: url('../img/weap_G.png');
+}
+
+.color1 {
+	background: url('../images/boxg.png');
+	width:30px;
+	height:30px;
+	z-index:3;
+}
+
+.color2 {
+	background: url('../images/boxr.png');
+	width:30px;
+	height:30px;
+	z-index:3;
+}
+
+.color3 {
+	background: url('../images/boxb.png');
+	width:30px;
+	height:30px;
+	z-index:3;
+}
+
+.color4 {
+	background: url('../images/boxbl.png');
+	width:30px;
+	height:30px;
+	z-index:3;
+}
+
+.colorwall {
+	background: url('../images/boxbr.png');
+	width:30px;
+	height:30px;
+	z-index:3;
+}
+
+.bullet {
+	background: #FFFFFF;
+}
+
+.player {
+	border: 1px solid rgba(0, 255, 0, 0.7);
+	border-radius: 15px;
+}

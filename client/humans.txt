@@ -1,0 +1,33 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+
+/* TEAM */
+  Nerd: Jeremy Buis
+  Site: hhtp://jeremybuis.com
+  Twitter:@jeremybuis
+  Location: A galaxy far far away
+
+  Insanity: Michael Kwan
+  Site: http://kwogger.ca
+  Twitter: kwogger
+  Location: Unknown
+
+  <your title>: Chris Soon
+  Site:
+  Twitter:
+  Location:
+
+  <your title>: Bunny?
+  Site:
+  Twitter:
+  Location:
+
+/* THANKS */
+  Names (& URL):
+
+/* SITE */
+  Standards: HTML5, CSS3
+  Components: CraftyJS, Socket.io
+  Served by: NodeJS, Express
+  Software:
